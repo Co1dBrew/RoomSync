@@ -128,3 +128,11 @@ RoomSync/
 | `npm run build`  | Production build            |
 | `npm run lint`   | Run ESLint                  |
 | `npm run format` | Run Prettier                |
+
+## AI Usage
+
+This project utilized the **Claude 4.6 Opus** model to assist in generating the large dataset of repetitive examples used for seeding the database.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
