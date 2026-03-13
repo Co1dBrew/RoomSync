@@ -1,7 +1,6 @@
 # RoomSync – Roommate Chores & Shared Expense Tracker
 
 **Author:** Qingdong Gong  &  Alexander Sholla
-**License:** MIT
 
 ---
 
