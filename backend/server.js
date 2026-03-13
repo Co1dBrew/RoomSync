@@ -10,6 +10,16 @@ const groupsRouter = require('./routes/groups');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'https://roomsync-1-cftl.onrender.com');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  next();
+});
+
 app.use(express.json());
 
 // Serve the React production build when available
