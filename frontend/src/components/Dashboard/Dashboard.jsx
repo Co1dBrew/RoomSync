@@ -87,29 +87,6 @@ function Dashboard({ onNavigate, activeGroup = null }) {
         </div>
       </div>
 
-      <div className="dashboard-recent">
-        <h2>Recent Chores</h2>
-        <ul className="dashboard-recent-list">
-          {filteredChores.slice(0, 5).map((chore) => (
-            <li key={chore._id} className="dashboard-recent-item">
-              <span>{chore.title}</span>
-              <span>{chore.assignedTo}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <div className="dashboard-recent">
-        <h2>Recent Expenses</h2>
-        <ul className="dashboard-recent-list">
-          {filteredExpenses.slice(0, 5).map((expense) => (
-            <li key={expense._id} className="dashboard-recent-item">
-              <span>{expense.description}</span>
-              <span>${expense.amount?.toFixed(2)}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
     </section>
   );
 }

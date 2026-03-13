@@ -43,7 +43,9 @@ function ExpenseList({ activeGroup = null }) {
     loadExpenses();
   }
 
-  const visibleExpenses = expenses;
+  const visibleExpenses = [...expenses].sort(
+    (a, b) => new Date(a.date || a.createdAt) - new Date(b.date || b.createdAt),
+  );
 
   const itemsPerPage = 50;
   const [currentPage, setCurrentPage] = useState(1);

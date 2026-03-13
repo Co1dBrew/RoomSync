@@ -60,7 +60,9 @@ function ChoreList({ activeGroup = null }) {
     loadChores();
   }
 
-  const visibleChores = chores;
+  const visibleChores = [...chores].sort(
+    (a, b) => new Date(a.dueDate || a.createdAt) - new Date(b.dueDate || b.createdAt),
+  );
 
   const itemsPerPage = 50;
   const [currentPage, setCurrentPage] = useState(1);
@@ -143,25 +145,43 @@ function ChoreList({ activeGroup = null }) {
             </header>
             <div className="chore-day-list">
               {choresByDate[dateKey].map((chore) => (
-                <button
+                <div
                   key={chore._id}
-                  type="button"
                   className={`chore-entry ${
                     chore.status === 'completed' ? 'is-complete' : ''
                   }`}
-                  onClick={() => handleToggleComplete(chore)}
                 >
-                  <div>
+                  <button
+                    type="button"
+                    className="chore-entry-complete"
+                    onClick={() => handleToggleComplete(chore)}
+                  >
+                    {chore.status === 'completed' ? '✓' : '○'}
+                  </button>
+                  <div className="chore-entry-main">
                     <h3>{chore.title}</h3>
                     <p>
                       Assigned to {chore.assignedTo || '—'} • Priority{' '}
                       {chore.priority}
                     </p>
                   </div>
-                  <span className="chore-entry-status">
-                    {chore.status === 'completed' ? 'Done' : 'Tap to complete'}
-                  </span>
-                </button>
+                  <div className="chore-entry-actions">
+                    <button
+                      type="button"
+                      className="btn-edit"
+                      onClick={() => handleEdit(chore)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-delete"
+                      onClick={() => handleDelete(chore._id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
               ))}
             </div>
           </section>

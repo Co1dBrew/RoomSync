@@ -1,23 +1,23 @@
 :root {
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --bg-card: #1e293b;
-  --bg-input: #334155;
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --accent: #6366f1;
-  --accent-hover: #818cf8;
-  --accent-glow: rgba(99, 102, 241, 0.25);
-  --success: #22c55e;
-  --warning: #f59e0b;
-  --danger: #ef4444;
-  --danger-hover: #f87171;
-  --border: #334155;
-  --radius: 12px;
-  --radius-sm: 8px;
-  --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
-  --transition: 0.2s ease;
+  --bg-primary: #f8f8f8;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-input: #ffffff;
+  --text-primary: #111111;
+  --text-secondary: #555555;
+  --text-muted: #777777;
+  --accent: #111111;
+  --accent-hover: #000000;
+  --accent-glow: rgba(0, 0, 0, 0.1);
+  --success: #2f855a;
+  --warning: #b7791f;
+  --danger: #c53030;
+  --danger-hover: #9b2c2c;
+  --border: #e5e5e5;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  --transition: 0.15s ease;
 }
 
 *,
@@ -63,19 +63,21 @@ a:hover {
 button {
   font-family: inherit;
   cursor: pointer;
-  border: none;
+  border: 1px solid var(--border);
   font-size: 0.875rem;
   font-weight: 500;
   padding: 0.5rem 1rem;
   border-radius: var(--radius-sm);
+  background: #fff;
   transition:
     background var(--transition),
     transform var(--transition),
-    box-shadow var(--transition);
+    box-shadow var(--transition),
+    border-color var(--transition);
 }
 
 button:active {
-  transform: scale(0.97);
+  transform: scale(0.98);
 }
 
 input,
@@ -88,7 +90,7 @@ textarea {
   border-radius: var(--radius-sm);
   background: var(--bg-input);
   color: var(--text-primary);
-  transition: border-color var(--transition);
+  transition: border-color var(--transition), box-shadow var(--transition);
   width: 100%;
 }
 
@@ -97,15 +99,15 @@ select:focus,
 textarea:focus {
   outline: none;
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-glow);
+  box-shadow: 0 0 0 2px var(--accent-glow);
 }
 
 label {
   display: block;
   margin-bottom: 0.25rem;
-  font-size: 0.8rem;
-  font-weight: 500;
+  font-size: 0.75rem;
+  font-weight: 600;
   color: var(--text-secondary);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.08em;
 }

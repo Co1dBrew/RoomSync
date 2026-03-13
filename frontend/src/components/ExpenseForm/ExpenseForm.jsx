@@ -143,15 +143,6 @@ function ExpenseForm({ expense, onClose }) {
             <option value="other">Other</option>
           </select>
         </div>
-        <div className="form-group">
-          <label htmlFor="expense-date">Date</label>
-          <input
-            id="expense-date"
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-          />
-        </div>
       </div>
 
       <div className="form-actions">

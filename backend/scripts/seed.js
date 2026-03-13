@@ -58,19 +58,22 @@ function randomItem(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function randomDate(startDate, endDate) {
-  const start = startDate.getTime();
-  const end = endDate.getTime();
-  return new Date(start + Math.random() * (end - start));
+function generateSequentialDates(count, startDate) {
+  const dates = [];
+  const current = new Date(startDate);
+  for (let i = 0; i < count; i++) {
+    dates.push(new Date(current));
+    current.setDate(current.getDate() + 1);
+  }
+  return dates;
 }
 
 function generateChores(count) {
   const chores = [];
-  const choreStartDate = new Date('2026-03-01');
-  const choreEndDate = new Date('2026-12-31');
+  const dates = generateSequentialDates(count, new Date('2026-01-01'));
   for (let i = 0; i < count; i++) {
-    const created = randomDate(choreStartDate, choreEndDate);
-    const due = new Date(created.getTime() + Math.random() * 14 * 86400000);
+    const created = dates[i];
+    const due = new Date(created.getTime() + 3 * 86400000);
     chores.push({
       title: randomItem(CHORE_TITLES),
       description: `Chore #${i + 1} – please complete by the due date.`,
@@ -86,8 +89,9 @@ function generateChores(count) {
 
 function generateExpenses(count) {
   const expenses = [];
+  const dates = generateSequentialDates(count, new Date('2025-01-01'));
   for (let i = 0; i < count; i++) {
-    const created = randomDate(new Date('2026-03-01'), new Date('2026-12-31'));
+    const created = dates[i];
     const paidBy = randomItem(ROOMMATES);
     const others = ROOMMATES.filter((r) => r !== paidBy);
     const splitCount = Math.floor(Math.random() * others.length) + 1;
