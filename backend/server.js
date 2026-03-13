@@ -5,7 +5,6 @@ require('dotenv').config();
 const { connectToDb } = require('./db/connection');
 const choresRouter = require('./routes/chores');
 const expensesRouter = require('./routes/expenses');
-const groupsRouter = require('./routes/groups');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -28,7 +27,6 @@ app.use(express.static(path.join(__dirname, '..', 'frontend', 'dist')));
 // API routes
 app.use('/api/chores', choresRouter);
 app.use('/api/expenses', expensesRouter);
-app.use('/api/groups', groupsRouter);
 
 // For client-side routing – serve index.html for non-API routes
 app.get('*', (_req, res) => {
