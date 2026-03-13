@@ -17,8 +17,10 @@ The app is built with a **React** frontend (client-side rendered) communicating 
 
 ## Screenshot
 
-![RoomSync Screenshot](docs/Project_Thumbnail.png)
-![Webpage Thumbnail](docs/Screenshot.png)
+![RoomSync Screenshot](docs/Screenshot.png)
+
+##Webpage Thumbnail
+![Webpage Thumbnail](docs/Project_Thumbnail.png)
 ---
 
 ## Tech Stack
