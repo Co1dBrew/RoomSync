@@ -19,7 +19,7 @@ The app is built with a **React** frontend (client-side rendered) communicating 
 
 ## Screenshot
 
-> *TODO: Replace with an actual screenshot after running the app.*
+![RoomSync Screenshot](docs/Screenshot.png)
 
 ---
 
@@ -81,6 +81,10 @@ npm run dev
 ### 6. Open the app
 
 Visit **http://localhost:5173** in your browser.
+
+### Deployment
+
+Live site: **https://roomsync-1-cftl.onrender.com**
 
 ---
 
