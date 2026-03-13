@@ -19,7 +19,7 @@ The app is built with a **React** frontend (client-side rendered) communicating 
 
 ![RoomSync Screenshot](docs/Screenshot.png)
 
-##Webpage Thumbnail
+## Webpage Thumbnail
 ![Webpage Thumbnail](docs/Project_Thumbnail.png)
 ---
 
