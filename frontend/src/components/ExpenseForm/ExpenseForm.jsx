@@ -2,18 +2,22 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import './ExpenseForm.css';
 
+const MEMBERS = ['Alice', 'Bob', 'Charlie', 'Diana'];
+
 function ExpenseForm({ expense, onClose }) {
   const isEditing = Boolean(expense);
   const [description, setDescription] = useState(expense?.description || '');
   const [amount, setAmount] = useState(expense?.amount ?? '');
   const [paidBy, setPaidBy] = useState(expense?.paidBy || '');
   const [splitBetween, setSplitBetween] = useState(
-    expense?.splitBetween?.join(', ') || '',
+    expense?.splitBetween || [],
   );
   const [category, setCategory] = useState(expense?.category || 'other');
   const [date, setDate] = useState(
     expense?.date || new Date().toISOString().split('T')[0],
   );
+
+  const groupMembers = MEMBERS;
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -21,10 +25,7 @@ function ExpenseForm({ expense, onClose }) {
       description,
       amount: Number(amount),
       paidBy,
-      splitBetween: splitBetween
-        .split(',')
-        .map((s) => s.trim())
-        .filter(Boolean),
+      splitBetween,
       category,
       date,
     };
@@ -60,6 +61,49 @@ function ExpenseForm({ expense, onClose }) {
 
       <div className="form-row">
         <div className="form-group">
+          <label htmlFor="expense-paid">Paid By</label>
+          <select
+            id="expense-paid"
+            value={paidBy}
+            onChange={(e) => setPaidBy(e.target.value)}
+            required
+          >
+            <option value="">Select member</option>
+            {groupMembers.map((member) => (
+              <option key={member} value={member}>
+                {member}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
+      <div className="form-group">
+        <label>Split Between</label>
+        <div className="split-grid">
+          {groupMembers.map((member) => (
+            <label key={member} className="split-option">
+              <input
+                type="checkbox"
+                checked={splitBetween.includes(member)}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setSplitBetween((prev) => [...prev, member]);
+                  } else {
+                    setSplitBetween((prev) =>
+                      prev.filter((name) => name !== member),
+                    );
+                  }
+                }}
+              />
+              {member}
+            </label>
+          ))}
+        </div>
+      </div>
+
+      <div className="form-row">
+        <div className="form-group">
           <label htmlFor="expense-amount">Amount ($)</label>
           <input
             id="expense-amount"
@@ -72,28 +116,14 @@ function ExpenseForm({ expense, onClose }) {
           />
         </div>
         <div className="form-group">
-          <label htmlFor="expense-paid">Paid By</label>
+          <label htmlFor="expense-date">Date</label>
           <input
-            id="expense-paid"
-            type="text"
-            value={paidBy}
-            onChange={(e) => setPaidBy(e.target.value)}
-            required
+            id="expense-date"
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
           />
         </div>
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="expense-split">
-          Split Between (comma-separated names)
-        </label>
-        <input
-          id="expense-split"
-          type="text"
-          value={splitBetween}
-          onChange={(e) => setSplitBetween(e.target.value)}
-          placeholder="Alice, Bob, Charlie"
-        />
       </div>
 
       <div className="form-row">
@@ -147,10 +177,6 @@ ExpenseForm.propTypes = {
     date: PropTypes.string,
   }),
   onClose: PropTypes.func.isRequired,
-};
-
-ExpenseForm.defaultProps = {
-  expense: null,
 };
 
 export default ExpenseForm;

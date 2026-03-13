@@ -1,7 +1,10 @@
 import PropTypes from 'prop-types';
 import './Navbar.css';
 
-function Navbar({ activePage, onNavigate }) {
+function Navbar({
+  activePage,
+  onNavigate,
+}) {
   const links = [
     { key: 'dashboard', label: 'Dashboard' },
     { key: 'chores', label: 'Chores' },

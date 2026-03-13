@@ -58,16 +58,18 @@ function randomItem(arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 }
 
-function randomDate(startYear, endYear) {
-  const start = new Date(startYear, 0, 1).getTime();
-  const end = new Date(endYear, 11, 31).getTime();
+function randomDate(startDate, endDate) {
+  const start = startDate.getTime();
+  const end = endDate.getTime();
   return new Date(start + Math.random() * (end - start));
 }
 
 function generateChores(count) {
   const chores = [];
+  const choreStartDate = new Date('2026-03-01');
+  const choreEndDate = new Date('2026-12-31');
   for (let i = 0; i < count; i++) {
-    const created = randomDate(2025, 2026);
+    const created = randomDate(choreStartDate, choreEndDate);
     const due = new Date(created.getTime() + Math.random() * 14 * 86400000);
     chores.push({
       title: randomItem(CHORE_TITLES),
@@ -85,7 +87,7 @@ function generateChores(count) {
 function generateExpenses(count) {
   const expenses = [];
   for (let i = 0; i < count; i++) {
-    const created = randomDate(2025, 2026);
+    const created = randomDate(new Date('2026-03-01'), new Date('2026-12-31'));
     const paidBy = randomItem(ROOMMATES);
     const others = ROOMMATES.filter((r) => r !== paidBy);
     const splitCount = Math.floor(Math.random() * others.length) + 1;
@@ -119,8 +121,8 @@ async function seed() {
     await db.collection('chores').deleteMany({});
     await db.collection('expenses').deleteMany({});
 
-    const chores = generateChores(500);
-    const expenses = generateExpenses(500);
+    const chores = generateChores(1000);
+    const expenses = generateExpenses(1000);
 
     await db.collection('chores').insertMany(chores);
     await db.collection('expenses').insertMany(expenses);

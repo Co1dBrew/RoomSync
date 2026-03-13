@@ -2,6 +2,8 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import './ChoreForm.css';
 
+const ROOMMATES = ['Alice', 'Bob', 'Charlie', 'Diana'];
+
 function ChoreForm({ chore, onClose }) {
   const isEditing = Boolean(chore);
   const [title, setTitle] = useState(chore?.title || '');
@@ -11,9 +13,18 @@ function ChoreForm({ chore, onClose }) {
   const [status, setStatus] = useState(chore?.status || 'pending');
   const [priority, setPriority] = useState(chore?.priority || 'medium');
 
+  const groupMembers = ROOMMATES;
+
   async function handleSubmit(e) {
     e.preventDefault();
-    const body = { title, description, assignedTo, dueDate, status, priority };
+    const body = {
+      title,
+      description,
+      assignedTo,
+      dueDate,
+      status,
+      priority,
+    };
     const url = isEditing ? `/api/chores/${chore._id}` : '/api/chores';
     const method = isEditing ? 'PUT' : 'POST';
 
@@ -57,12 +68,18 @@ function ChoreForm({ chore, onClose }) {
       <div className="form-row">
         <div className="form-group">
           <label htmlFor="chore-assigned">Assigned To</label>
-          <input
+          <select
             id="chore-assigned"
-            type="text"
             value={assignedTo}
             onChange={(e) => setAssignedTo(e.target.value)}
-          />
+          >
+            <option value="">Select member</option>
+            {groupMembers.map((member) => (
+              <option key={member} value={member}>
+                {member}
+              </option>
+            ))}
+          </select>
         </div>
         <div className="form-group">
           <label htmlFor="chore-due">Due Date</label>

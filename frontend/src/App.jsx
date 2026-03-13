@@ -9,15 +9,12 @@ function App() {
   const [page, setPage] = useState('dashboard');
 
   let content;
-  switch (page) {
-    case 'chores':
-      content = <ChoreList />;
-      break;
-    case 'expenses':
-      content = <ExpenseList />;
-      break;
-    default:
-      content = <Dashboard onNavigate={setPage} />;
+  if (page === 'chores') {
+    content = <ChoreList />;
+  } else if (page === 'expenses') {
+    content = <ExpenseList />;
+  } else {
+    content = <Dashboard onNavigate={setPage} />;
   }
 
   return (

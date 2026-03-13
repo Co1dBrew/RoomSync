@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './Dashboard.css';
 
-function Dashboard({ onNavigate }) {
+function Dashboard({ onNavigate, activeGroup = null }) {
   const [chores, setChores] = useState([]);
   const [expenses, setExpenses] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -31,8 +31,17 @@ function Dashboard({ onNavigate }) {
     return <p style={{ textAlign: 'center', padding: '3rem' }}>Loading…</p>;
   }
 
-  const pendingChores = chores.filter((c) => c.status === 'pending').length;
-  const totalExpenses = expenses
+  const filteredChores = activeGroup
+    ? chores.filter((chore) => chore.groupId === activeGroup.id)
+    : chores;
+  const filteredExpenses = activeGroup
+    ? expenses.filter((expense) => expense.groupId === activeGroup.id)
+    : expenses;
+
+  const pendingChores = filteredChores.filter(
+    (c) => c.status === 'pending',
+  ).length;
+  const totalExpenses = filteredExpenses
     .reduce((sum, e) => sum + (e.amount || 0), 0)
     .toFixed(2);
 
@@ -50,7 +59,7 @@ function Dashboard({ onNavigate }) {
         >
           <span className="dashboard-card-icon">📋</span>
           <h2>Total Chores</h2>
-          <span className="stat">{chores.length}</span>
+          <span className="stat">{filteredChores.length}</span>
         </div>
 
         <div className="dashboard-card">
@@ -74,14 +83,14 @@ function Dashboard({ onNavigate }) {
         <div className="dashboard-card">
           <span className="dashboard-card-icon">🧾</span>
           <h2>Expense Count</h2>
-          <span className="stat">{expenses.length}</span>
+          <span className="stat">{filteredExpenses.length}</span>
         </div>
       </div>
 
       <div className="dashboard-recent">
         <h2>Recent Chores</h2>
         <ul className="dashboard-recent-list">
-          {chores.slice(0, 5).map((chore) => (
+          {filteredChores.slice(0, 5).map((chore) => (
             <li key={chore._id} className="dashboard-recent-item">
               <span>{chore.title}</span>
               <span>{chore.assignedTo}</span>
@@ -93,7 +102,7 @@ function Dashboard({ onNavigate }) {
       <div className="dashboard-recent">
         <h2>Recent Expenses</h2>
         <ul className="dashboard-recent-list">
-          {expenses.slice(0, 5).map((expense) => (
+          {filteredExpenses.slice(0, 5).map((expense) => (
             <li key={expense._id} className="dashboard-recent-item">
               <span>{expense.description}</span>
               <span>${expense.amount?.toFixed(2)}</span>
@@ -107,6 +116,10 @@ function Dashboard({ onNavigate }) {
 
 Dashboard.propTypes = {
   onNavigate: PropTypes.func.isRequired,
+  activeGroup: PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+  }),
 };
 
 export default Dashboard;

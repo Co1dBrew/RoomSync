@@ -7,12 +7,19 @@
 .chore-list-header {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
+  gap: 1rem;
 }
 
 .chore-list-header h1 {
   font-size: 1.75rem;
   font-weight: 700;
+}
+
+.chore-subtitle {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin-top: 0.4rem;
 }
 
 .btn-add {
@@ -28,109 +35,128 @@
   box-shadow: 0 0 16px var(--accent-glow);
 }
 
-.chore-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1rem;
+.chore-calendar {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
-.chore-card {
+.chore-day {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
+}
+
+.chore-day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.chore-day-header h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.chore-day-count {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  background: var(--bg-input);
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+}
+
+.chore-day-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.chore-entry {
+  width: 100%;
+  text-align: left;
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: var(--radius-sm);
+  padding: 0.85rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
   transition:
     transform var(--transition),
-    box-shadow var(--transition);
+    box-shadow var(--transition),
+    border-color var(--transition);
 }
 
-.chore-card:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow);
-}
-
-.chore-card h3 {
-  font-size: 1rem;
+.chore-entry h3 {
+  font-size: 0.95rem;
   font-weight: 600;
+  margin-bottom: 0.25rem;
 }
 
-.chore-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+.chore-entry p {
   font-size: 0.8rem;
-}
-
-.chore-badge {
-  display: inline-block;
-  padding: 0.2rem 0.6rem;
-  border-radius: 999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: capitalize;
-}
-
-.badge-pending {
-  background: rgba(245, 158, 11, 0.15);
-  color: var(--warning);
-}
-
-.badge-in-progress {
-  background: rgba(99, 102, 241, 0.15);
-  color: var(--accent);
-}
-
-.badge-completed {
-  background: rgba(34, 197, 94, 0.15);
-  color: var(--success);
-}
-
-.badge-low {
-  background: rgba(100, 116, 139, 0.15);
-  color: var(--text-muted);
-}
-
-.badge-medium {
-  background: rgba(245, 158, 11, 0.15);
-  color: var(--warning);
-}
-
-.badge-high {
-  background: rgba(239, 68, 68, 0.15);
-  color: var(--danger);
-}
-
-.chore-card p {
-  font-size: 0.85rem;
   color: var(--text-secondary);
 }
 
-.chore-actions {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+.chore-entry-status {
+  font-size: 0.75rem;
+  color: var(--accent);
+  font-weight: 600;
 }
 
-.btn-edit {
+.chore-entry:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadow);
+  transform: translateY(-1px);
+}
+
+.chore-entry.is-complete {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.4);
+}
+
+.chore-entry.is-complete h3,
+.chore-entry.is-complete p {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.chore-entry.is-complete .chore-entry-status {
+  color: var(--success);
+}
+
+.pagination {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.pagination button {
+  padding: 0.45rem 0.75rem;
+  border-radius: 0.5rem;
   background: var(--bg-input);
   color: var(--text-primary);
-  flex: 1;
+  border: 1px solid var(--border);
+  font-weight: 600;
 }
 
-.btn-edit:hover {
+.pagination button.active {
   background: var(--accent);
   color: #fff;
+  border-color: var(--accent);
+  box-shadow: 0 0 10px var(--accent-glow);
 }
 
-.btn-delete {
-  background: rgba(239, 68, 68, 0.15);
-  color: var(--danger);
-}
-
-.btn-delete:hover {
-  background: var(--danger);
-  color: #fff;
+.pagination button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
