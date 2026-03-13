@@ -1,7 +1,7 @@
 # RoomSync – Roommate Chores & Shared Expense Tracker
 
-**Author:** Qingdong Gong  
-**Class Link:** [CS Web Development](https://cs.example.edu/webdev)  
+**Author:** Qingdong Gong  &  Alexander Sholla
+**Class Link:** [CS Web Development]
 **License:** MIT
 
 ---
@@ -43,7 +43,7 @@ The app is built with a **React** frontend (client-side rendered) communicating 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/<your-username>/RoomSync.git
+git clone https://github.com/Co1dBrew/RoomSync.git
 cd RoomSync
 ```
 
@@ -53,7 +53,6 @@ cd RoomSync
 cd backend
 npm install
 cp .env.example .env
-# Edit .env with your MongoDB connection string
 ```
 
 ### 3. Seed the database (1,000 synthetic records)
