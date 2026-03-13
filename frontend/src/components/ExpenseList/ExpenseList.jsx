@@ -10,7 +10,7 @@ function ExpenseList({ activeGroup = null }) {
 
   async function loadExpenses() {
     try {
-      const res = await fetch('/api/expenses');
+      const res = await fetch('https://roomsync-blv0.onrender.com/api/expenses');
       const data = await res.json();
       setExpenses(data);
     } catch (err) {
@@ -25,7 +25,9 @@ function ExpenseList({ activeGroup = null }) {
   async function handleDelete(id) {
     if (!window.confirm('Delete this expense?')) return;
     try {
-      await fetch(`/api/expenses/${id}`, { method: 'DELETE' });
+      await fetch(`https://roomsync-blv0.onrender.com/api/expenses/${id}`, {
+        method: 'DELETE',
+      });
       setExpenses((prev) => prev.filter((e) => e._id !== id));
     } catch (err) {
       console.error('Failed to delete expense:', err);

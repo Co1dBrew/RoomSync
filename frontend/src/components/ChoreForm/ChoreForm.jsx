@@ -25,7 +25,9 @@ function ChoreForm({ chore, onClose }) {
       status,
       priority,
     };
-    const url = isEditing ? `/api/chores/${chore._id}` : '/api/chores';
+    const url = isEditing
+      ? `https://roomsync-blv0.onrender.com/api/chores/${chore._id}`
+      : 'https://roomsync-blv0.onrender.com/api/chores';
     const method = isEditing ? 'PUT' : 'POST';
 
     try {

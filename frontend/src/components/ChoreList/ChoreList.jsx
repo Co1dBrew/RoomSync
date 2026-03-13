@@ -10,7 +10,7 @@ function ChoreList({ activeGroup = null }) {
 
   async function loadChores() {
     try {
-      const res = await fetch('/api/chores');
+      const res = await fetch('https://roomsync-blv0.onrender.com/api/chores');
       const data = await res.json();
       setChores(data);
     } catch (err) {
@@ -25,7 +25,9 @@ function ChoreList({ activeGroup = null }) {
   async function handleDelete(id) {
     if (!window.confirm('Delete this chore?')) return;
     try {
-      await fetch(`/api/chores/${id}`, { method: 'DELETE' });
+      await fetch(`https://roomsync-blv0.onrender.com/api/chores/${id}`, {
+        method: 'DELETE',
+      });
       setChores((prev) => prev.filter((c) => c._id !== id));
     } catch (err) {
       console.error('Failed to delete chore:', err);
@@ -35,7 +37,9 @@ function ChoreList({ activeGroup = null }) {
   async function handleToggleComplete(chore) {
     const nextStatus = chore.status === 'completed' ? 'pending' : 'completed';
     try {
-      const res = await fetch(`/api/chores/${chore._id}`, {
+      const res = await fetch(
+        `https://roomsync-blv0.onrender.com/api/chores/${chore._id}`,
+        {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: nextStatus }),

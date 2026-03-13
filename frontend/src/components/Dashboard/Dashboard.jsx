@@ -11,8 +11,8 @@ function Dashboard({ onNavigate, activeGroup = null }) {
     async function fetchData() {
       try {
         const [choresRes, expensesRes] = await Promise.all([
-          fetch('/api/chores'),
-          fetch('/api/expenses'),
+          fetch('https://roomsync-blv0.onrender.com/api/chores'),
+          fetch('https://roomsync-blv0.onrender.com/api/expenses'),
         ]);
         const choresData = await choresRes.json();
         const expensesData = await expensesRes.json();

@@ -29,7 +29,9 @@ function ExpenseForm({ expense, onClose }) {
       category,
       date,
     };
-    const url = isEditing ? `/api/expenses/${expense._id}` : '/api/expenses';
+    const url = isEditing
+      ? `https://roomsync-blv0.onrender.com/api/expenses/${expense._id}`
+      : 'https://roomsync-blv0.onrender.com/api/expenses';
     const method = isEditing ? 'PUT' : 'POST';
 
     try {
