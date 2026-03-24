@@ -1,3 +1,5 @@
+-- Good readme! consider including links to the design doc, slides and youtube video. 
+
 # RoomSync – Roommate Chores & Shared Expense Tracker
 
 **Author:** Qingdong Gong  &  Alexander Sholla
