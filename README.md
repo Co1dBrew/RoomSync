@@ -1,3 +1,6 @@
+//One thing I noticed is that there doesn’t seem to be a login feature right now, so anyone can edit the app data. 
+Adding authentication would make the project feel more complete and would also help with the Passport requirement in the rubric.
+
 # RoomSync – Roommate Chores & Shared Expense Tracker
 
 **Author:** Qingdong Gong  &  Alexander Sholla
