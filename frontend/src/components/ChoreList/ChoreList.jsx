@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import ChoreForm from '../ChoreForm/ChoreForm';
 import { API } from '../../config/api';
-import { API } from '../../config/api';
 import './ChoreList.css';
 
 function ChoreList({ activeGroup = null }) {
