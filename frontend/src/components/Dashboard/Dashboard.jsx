@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './Dashboard.css';
 
+import { API } from '../../config/api';
 function Dashboard({ onNavigate, activeGroup = null }) {
   const [chores, setChores] = useState([]);
   const [expenses, setExpenses] = useState([]);
@@ -11,8 +12,8 @@ function Dashboard({ onNavigate, activeGroup = null }) {
     async function fetchData() {
       try {
         const [choresRes, expensesRes] = await Promise.all([
-          fetch('https://roomsync-blv0.onrender.com/api/chores'),
-          fetch('https://roomsync-blv0.onrender.com/api/expenses'),
+          fetch(API.chores),
+          fetch(API.expenses),
         ]);
         const choresData = await choresRes.json();
         const expensesData = await expensesRes.json();

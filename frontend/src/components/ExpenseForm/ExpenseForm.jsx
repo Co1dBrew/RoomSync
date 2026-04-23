@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { API } from '../../config/api';
 import './ExpenseForm.css';
 
 const MEMBERS = ['Alice', 'Bob', 'Charlie', 'Diana'];
@@ -9,9 +10,7 @@ function ExpenseForm({ expense, onClose }) {
   const [description, setDescription] = useState(expense?.description || '');
   const [amount, setAmount] = useState(expense?.amount ?? '');
   const [paidBy, setPaidBy] = useState(expense?.paidBy || '');
-  const [splitBetween, setSplitBetween] = useState(
-    expense?.splitBetween || [],
-  );
+  const [splitBetween, setSplitBetween] = useState(expense?.splitBetween || []);
   const [category, setCategory] = useState(expense?.category || 'other');
   const [date, setDate] = useState(
     expense?.date || new Date().toISOString().split('T')[0],
@@ -30,8 +29,8 @@ function ExpenseForm({ expense, onClose }) {
       date,
     };
     const url = isEditing
-      ? `https://roomsync-blv0.onrender.com/api/expenses/${expense._id}`
-      : 'https://roomsync-blv0.onrender.com/api/expenses';
+      ? `${API.expenses}/${expense._id}`
+      : '${API.expenses}';
     const method = isEditing ? 'PUT' : 'POST';
 
     try {

@@ -1,16 +1,23 @@
 import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import ChoreForm from '../ChoreForm/ChoreForm';
+import { API } from '../../config/api';
+import { API } from '../../config/api';
 import './ChoreList.css';
 
 function ChoreList({ activeGroup = null }) {
   const [chores, setChores] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingChore, setEditingChore] = useState(null);
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [priorityFilter, setPriorityFilter] = useState('all');
+  const [personFilter, setPersonFilter] = useState('all');
+  const [dateRangeStart, setDateRangeStart] = useState('');
+  const [dateRangeEnd, setDateRangeEnd] = useState('');
 
   async function loadChores() {
     try {
-      const res = await fetch('https://roomsync-blv0.onrender.com/api/chores');
+      const res = await fetch(API.chores);
       const data = await res.json();
       setChores(data);
     } catch (err) {
@@ -25,7 +32,7 @@ function ChoreList({ activeGroup = null }) {
   async function handleDelete(id) {
     if (!window.confirm('Delete this chore?')) return;
     try {
-      await fetch(`https://roomsync-blv0.onrender.com/api/chores/${id}`, {
+      await fetch(`${API.chores}/${id}`, {
         method: 'DELETE',
       });
       setChores((prev) => prev.filter((c) => c._id !== id));
@@ -38,7 +45,7 @@ function ChoreList({ activeGroup = null }) {
     const nextStatus = chore.status === 'completed' ? 'pending' : 'completed';
     try {
       const res = await fetch(
-        `https://roomsync-blv0.onrender.com/api/chores/${chore._id}`,
+        `${API.chores}/${chore._id}`,
         {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -64,13 +71,26 @@ function ChoreList({ activeGroup = null }) {
     loadChores();
   }
 
-  const visibleChores = [...chores].sort(
+  const sortedChores = [...chores].sort(
     (a, b) => new Date(a.dueDate || a.createdAt) - new Date(b.dueDate || b.createdAt),
   );
 
+  const filteredChores = sortedChores.filter((chore) => {
+    if (statusFilter !== 'all' && chore.status !== statusFilter) return false;
+    if (priorityFilter !== 'all' && chore.priority !== priorityFilter) return false;
+    if (personFilter !== 'all' && chore.assignedTo !== personFilter) return false;
+    if (dateRangeStart && chore.dueDate && chore.dueDate < dateRangeStart) return false;
+    if (dateRangeEnd && chore.dueDate && chore.dueDate > dateRangeEnd) return false;
+    return true;
+  });
+
   const itemsPerPage = 50;
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.max(1, Math.ceil(visibleChores.length / itemsPerPage));
+  const totalPages = Math.max(1, Math.ceil(filteredChores.length / itemsPerPage));
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [statusFilter, priorityFilter, personFilter, dateRangeStart, dateRangeEnd]);
 
   useEffect(() => {
     setCurrentPage((prev) => Math.min(prev, totalPages));
@@ -102,10 +122,18 @@ function ChoreList({ activeGroup = null }) {
     return items;
   }
 
-  const pagedChores = visibleChores.slice(
+  const pagedChores = filteredChores.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
+
+  function clearAllFilters() {
+    setStatusFilter('all');
+    setPriorityFilter('all');
+    setPersonFilter('all');
+    setDateRangeStart('');
+    setDateRangeEnd('');
+  }
 
   if (showForm) {
     return <ChoreForm chore={editingChore} onClose={handleFormClose} />;
@@ -135,6 +163,53 @@ function ChoreList({ activeGroup = null }) {
         </div>
         <button className="btn-add" onClick={() => setShowForm(true)}>
           + New Chore
+        </button>
+      </div>
+
+      <div className="filter-bar">
+        <div className="filter-group">
+          <label>Status</label>
+          <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+            <option value="all">All</option>
+            <option value="pending">Pending</option>
+            <option value="in-progress">In Progress</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>
+
+        <div className="filter-group">
+          <label>Priority</label>
+          <select value={priorityFilter} onChange={(e) => setPriorityFilter(e.target.value)}>
+            <option value="all">All</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+        </div>
+
+        <div className="filter-group">
+          <label>Assigned To</label>
+          <select value={personFilter} onChange={(e) => setPersonFilter(e.target.value)}>
+            <option value="all">All</option>
+            <option value="Alice">Alice</option>
+            <option value="Bob">Bob</option>
+            <option value="Charlie">Charlie</option>
+            <option value="Diana">Diana</option>
+          </select>
+        </div>
+
+        <div className="filter-group">
+          <label>From</label>
+          <input type="date" value={dateRangeStart} onChange={(e) => setDateRangeStart(e.target.value)} />
+        </div>
+
+        <div className="filter-group">
+          <label>To</label>
+          <input type="date" value={dateRangeEnd} onChange={(e) => setDateRangeEnd(e.target.value)} />
+        </div>
+
+        <button className="btn-clear-filters" onClick={clearAllFilters}>
+          Clear All
         </button>
       </div>
 
@@ -192,7 +267,13 @@ function ChoreList({ activeGroup = null }) {
         ))}
       </div>
 
-      {visibleChores.length === 0 && (
+      {filteredChores.length === 0 && chores.length > 0 && (
+        <p style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
+          No chores match your filters.
+        </p>
+      )}
+
+      {chores.length === 0 && (
         <p style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
           No chores yet. Create one to get started!
         </p>

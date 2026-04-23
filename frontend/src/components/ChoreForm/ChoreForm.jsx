@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { API } from '../../config/api';
 import './ChoreForm.css';
 
 const ROOMMATES = ['Alice', 'Bob', 'Charlie', 'Diana'];
@@ -25,9 +26,7 @@ function ChoreForm({ chore, onClose }) {
       status,
       priority,
     };
-    const url = isEditing
-      ? `https://roomsync-blv0.onrender.com/api/chores/${chore._id}`
-      : 'https://roomsync-blv0.onrender.com/api/chores';
+    const url = isEditing ? `${API.chores}/${chore._id}` : '${API.chores}';
     const method = isEditing ? 'PUT' : 'POST';
 
     try {

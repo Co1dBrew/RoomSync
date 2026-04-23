@@ -2,15 +2,21 @@ import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import ExpenseForm from '../ExpenseForm/ExpenseForm';
 import './ExpenseList.css';
+import { API } from '../../config/api';
 
 function ExpenseList({ activeGroup = null }) {
   const [expenses, setExpenses] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [editingExpense, setEditingExpense] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [personFilter, setPersonFilter] = useState('all');
+  const [dateRangeStart, setDateRangeStart] = useState('');
+  const [dateRangeEnd, setDateRangeEnd] = useState('');
 
   async function loadExpenses() {
     try {
-      const res = await fetch('https://roomsync-blv0.onrender.com/api/expenses');
+      const res = await fetch(API.expenses);
       const data = await res.json();
       setExpenses(data);
     } catch (err) {
@@ -25,7 +31,7 @@ function ExpenseList({ activeGroup = null }) {
   async function handleDelete(id) {
     if (!window.confirm('Delete this expense?')) return;
     try {
-      await fetch(`https://roomsync-blv0.onrender.com/api/expenses/${id}`, {
+      await fetch(`${API.expenses}/${id}`, {
         method: 'DELETE',
       });
       setExpenses((prev) => prev.filter((e) => e._id !== id));
@@ -45,13 +51,30 @@ function ExpenseList({ activeGroup = null }) {
     loadExpenses();
   }
 
-  const visibleExpenses = [...expenses].sort(
+  const sortedExpenses = [...expenses].sort(
     (a, b) => new Date(a.date || a.createdAt) - new Date(b.date || b.createdAt),
   );
 
+  const filteredExpenses = sortedExpenses.filter((expense) => {
+    if (searchQuery && !expense.description?.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+    if (categoryFilter !== 'all' && expense.category !== categoryFilter) return false;
+    if (personFilter !== 'all') {
+      const matchesPaidBy = expense.paidBy === personFilter;
+      const matchesSplit = expense.splitBetween?.includes(personFilter);
+      if (!matchesPaidBy && !matchesSplit) return false;
+    }
+    if (dateRangeStart && expense.date && expense.date < dateRangeStart) return false;
+    if (dateRangeEnd && expense.date && expense.date > dateRangeEnd) return false;
+    return true;
+  });
+
   const itemsPerPage = 50;
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.max(1, Math.ceil(visibleExpenses.length / itemsPerPage));
+  const totalPages = Math.max(1, Math.ceil(filteredExpenses.length / itemsPerPage));
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchQuery, categoryFilter, personFilter, dateRangeStart, dateRangeEnd]);
 
   useEffect(() => {
     setCurrentPage((prev) => Math.min(prev, totalPages));
@@ -83,12 +106,20 @@ function ExpenseList({ activeGroup = null }) {
     return items;
   }
 
-  const pagedExpenses = visibleExpenses.slice(
+  const pagedExpenses = filteredExpenses.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
 
-  const balances = visibleExpenses.reduce((acc, expense) => {
+  function clearAllFilters() {
+    setSearchQuery('');
+    setCategoryFilter('all');
+    setPersonFilter('all');
+    setDateRangeStart('');
+    setDateRangeEnd('');
+  }
+
+  const balances = filteredExpenses.reduce((acc, expense) => {
     const splitCount = expense.splitBetween?.length || 0;
     if (!splitCount) return acc;
 
@@ -132,6 +163,57 @@ function ExpenseList({ activeGroup = null }) {
         </div>
         <button className="btn-add" onClick={() => setShowForm(true)}>
           + New Expense
+        </button>
+      </div>
+
+      <div className="filter-bar">
+        <div className="filter-group filter-search">
+          <label>Search</label>
+          <input
+            type="text"
+            placeholder="Search expenses..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+        </div>
+
+        <div className="filter-group">
+          <label>Category</label>
+          <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}>
+            <option value="all">All</option>
+            <option value="groceries">Groceries</option>
+            <option value="utilities">Utilities</option>
+            <option value="rent">Rent</option>
+            <option value="supplies">Supplies</option>
+            <option value="entertainment">Entertainment</option>
+            <option value="internet">Internet</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div className="filter-group">
+          <label>Person</label>
+          <select value={personFilter} onChange={(e) => setPersonFilter(e.target.value)}>
+            <option value="all">All</option>
+            <option value="Alice">Alice</option>
+            <option value="Bob">Bob</option>
+            <option value="Charlie">Charlie</option>
+            <option value="Diana">Diana</option>
+          </select>
+        </div>
+
+        <div className="filter-group">
+          <label>From</label>
+          <input type="date" value={dateRangeStart} onChange={(e) => setDateRangeStart(e.target.value)} />
+        </div>
+
+        <div className="filter-group">
+          <label>To</label>
+          <input type="date" value={dateRangeEnd} onChange={(e) => setDateRangeEnd(e.target.value)} />
+        </div>
+
+        <button className="btn-clear-filters" onClick={clearAllFilters}>
+          Clear All
         </button>
       </div>
 
@@ -224,7 +306,13 @@ function ExpenseList({ activeGroup = null }) {
         </table>
       </div>
 
-      {visibleExpenses.length === 0 && (
+      {filteredExpenses.length === 0 && expenses.length > 0 && (
+        <p style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
+          No expenses match your filters.
+        </p>
+      )}
+
+      {expenses.length === 0 && (
         <p style={{ textAlign: 'center', color: 'var(--text-muted)' }}>
           No expenses yet. Add one to start tracking!
         </p>
